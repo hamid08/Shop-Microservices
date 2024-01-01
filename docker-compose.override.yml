@@ -1,0 +1,70 @@
+version: '3.4'
+
+services:
+
+  productdb:
+    container_name: productdb
+    environment:
+       - POSTGRES_USER=admin
+       - POSTGRES_PASSWORD=admin1234
+       - POSTGRES_DB=ProductDb
+    restart: always
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+  discountdb:
+    container_name: discountdb
+    environment:
+       - POSTGRES_USER=admin
+       - POSTGRES_PASSWORD=admin1234
+       - POSTGRES_DB=DiscountDb
+    restart: always
+    ports:
+      - "5436:5432"
+    volumes:
+      - discount_postgres_data:/var/lib/postgresql/data/      
+
+  basketdb:
+    container_name: basketdb
+    restart: always
+    ports:
+      - "6379:6379" 
+  pgadmin:
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@aspnetrun.com
+      - PGADMIN_DEFAULT_PASSWORD=admin1234
+    restart: always
+    ports:
+      - "5070:80"
+    volumes:
+      - pgadmin_data:/root/.pgadmin
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    ports:
+        - "5672:5672"
+        - "15672:15672"
+      
+  products.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "10000:80"
+    depends_on:
+      - productdb
+
+  basket.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "10001:80"
+
+
+  discount.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "10002:80"
+

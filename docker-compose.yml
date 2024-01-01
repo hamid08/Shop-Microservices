@@ -1,0 +1,35 @@
+version: '3.4'
+
+services:
+  productdb:
+    image: postgres
+  discountdb:
+    image: postgres
+  basketdb:
+    image: redis:alpine
+  pgadmin:
+    image: dpage/pgadmin4
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+  products.api:
+    image: ${DOCKER_REGISTRY-}productsapi
+    build:
+      context: .
+      dockerfile: src/services/Products/Products.Api/Dockerfile
+  basket.api:
+    image: ${DOCKER_REGISTRY-}basketapi
+    build:
+      context: .
+      dockerfile: src/services/Basket.API/Dockerfile
+
+  discount.api:
+    image: ${DOCKER_REGISTRY-}discountapi
+    build:
+      context: .
+      dockerfile: src/services/Discounts/Discount.Api/Dockerfile
+
+volumes:
+    postgres_data:
+    discount_postgres_data:
+    pgadmin_data:
+
